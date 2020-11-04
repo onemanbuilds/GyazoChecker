@@ -1,5 +1,11 @@
 # GyazoChecker
  Check multiple accounts validity on gyazo.
+
+# Installation
+```
+pip3 install -r requirements.txt
+``` 
+
 # Tool
 ![](https://i.ibb.co/hXngLxq/example.png)
 
