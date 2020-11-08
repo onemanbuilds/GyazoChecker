@@ -3,7 +3,6 @@ from os import name,system
 from sys import stdout
 from random import choice
 from threading import Thread,Lock,active_count
-from fake_useragent import UserAgent
 from time import sleep
 from bs4 import BeautifulSoup
 import requests
@@ -28,7 +27,7 @@ class Main:
         self.lock.release()
 
     def ReadFile(self,filename,method):
-        with open(filename,method) as f:
+        with open(filename,method,encoding='utf8') as f:
             content = [line.strip('\n') for line in f]
             return content
 
@@ -57,23 +56,26 @@ class Main:
             self.SetTitle('One Man Builds Gyazo Checker Tool ^| HITS: {0} ^| BADS: {1} ^| RETRIES: {2} ^| THREADS: {3}'.format(self.hits,self.bads,self.retries,active_count()-1))
             sleep(0.1)
 
+    def GetRandomUserAgent(self):
+        useragents = self.ReadFile('useragents.txt','r')
+        return choice(useragents)
+
     def __init__(self):
         init(convert=True)
         self.clear()
         self.SetTitle('One Man Builds Gyazo Checker Tool')
         self.title = Style.BRIGHT+Fore.RED+"""                                        
-                          ______   __ _    ________     ____ _   _ _____ ____ _  _______ ____  
-                         / ___\ \ / // \  |__  / _ \   / ___| | | | ____/ ___| |/ | ____|  _ \ 
-                        | |  _ \ V // _ \   / | | | | | |   | |_| |  _|| |   | ' /|  _| | |_) |
-                        | |_| | | |/ ___ \ / /| |_| | | |___|  _  | |__| |___| . \| |___|  _ < 
-                         \____| |_/_/   \_/____\___/   \____|_| |_|_____\____|_|\_|_____|_| \_\\
-                                                                                        
+                                 ╔══════════════════════════════════════════════════╗
+                                        ╔═╗╦ ╦╔═╗╔═╗╔═╗  ╔═╗╦ ╦╔═╗╔═╗╦╔═╔═╗╦═╗
+                                        ║ ╦╚╦╝╠═╣╔═╝║ ║  ║  ╠═╣║╣ ║  ╠╩╗║╣ ╠╦╝
+                                        ╚═╝ ╩ ╩ ╩╚═╝╚═╝  ╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝╩╚═
+                                 ╚══════════════════════════════════════════════════╝
+                                                                                                                                
         """
         print(self.title)
         self.hits = 0
         self.bads = 0
         self.retries = 0
-        self.ua = UserAgent()
         self.lock = Lock()
         self.use_proxy = int(input(Style.BRIGHT+Fore.CYAN+'['+Fore.RED+'>'+Fore.CYAN+'] ['+Fore.RED+'1'+Fore.CYAN+']Proxy ['+Fore.RED+'0'+Fore.CYAN+']Proxyless: '))
         
@@ -103,7 +105,7 @@ class Main:
             link = 'https://gyazo.com/login'
 
             headers = {
-                "User-Agent": self.ua.random,
+                "User-Agent": self.GetRandomUserAgent()
             }
 
             response = session.get(link,headers=headers)
@@ -122,7 +124,7 @@ class Main:
             response = ''
 
             headers = {
-                "User-Agent": self.ua.random,
+                "User-Agent": self.GetRandomUserAgent(),
                 'x-csrf-token':csrf_token
             }
 
